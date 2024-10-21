@@ -2,7 +2,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import { join } from 'path';
 import { validate } from 'uuid';
 import { HttpMethod } from '../types/HttpMethod';
-import { getUsers, getUser, createUser } from '../services/userService';
+import { getUsers, getUser, createUser, updateUser } from '../services/userService';
 import { parseBody } from '../services/bodyParserService';
 
 export const baseControllerUrl = '/api/users';
@@ -45,6 +45,36 @@ export async function userController(req: IncomingMessage, res: ServerResponse, 
                 const newUser = createUser({ username, age, hobbies });
                 res.statusCode = 201;
                 return res.end(JSON.stringify(newUser));
+            } catch {
+                res.statusCode = 400;
+                return res.end(JSON.stringify({ message: 'Invalid JSON format' }));
+            }
+        }
+    }
+    if (method === HttpMethod.PUT) {
+        if (id && pathname === join(baseControllerUrl, id)) {
+            if (!validate(id)) {
+                res.statusCode = 400;
+                res.end(JSON.stringify({ message: 'Invalid user ID format' }));
+                return;
+            }
+            const userExists = getUser(id);
+            if (!userExists) {
+                res.statusCode = 404;
+                res.end(JSON.stringify({ message: 'User not found' }));
+                return;
+            }
+            const body = await parseBody(req);
+            try {
+                const { username, age, hobbies } = body;
+                if (!username || typeof age !== 'number' || !Array.isArray(hobbies)) {
+                    res.statusCode = 400;
+                    return res.end(JSON.stringify({ message: 'Invalid or missing user data' }));
+                }
+
+                const updatedUser = updateUser(id, { username, age, hobbies });
+                res.statusCode = 201;
+                return res.end(JSON.stringify(updatedUser));
             } catch {
                 res.statusCode = 400;
                 return res.end(JSON.stringify({ message: 'Invalid JSON format' }));

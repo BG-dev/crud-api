@@ -16,3 +16,12 @@ export function createUser(userData: Omit<User, 'id'>) {
     usersStorage.push(newUser);
     return newUser;
 }
+
+export function updateUser(id: string, userData: Omit<User, 'id'>): User | null {
+    const index = usersStorage.findIndex((user) => user.id === id);
+    if (index !== -1) {
+        usersStorage[index] = { id, ...userData };
+        return usersStorage[index];
+    }
+    return null;
+}
