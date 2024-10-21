@@ -45,8 +45,10 @@ $ npm run start:prod
 
 ### Endpoints
 
-| GET | http://localhost:4000/api/users |  
-| GET | http://localhost:4000/api/users/{:id} |  
-| POST | http://localhost:4000/api/users |
-| PUT | http://localhost:4000/api/users/{:id} |
-| DELETE | http://localhost:4000/api/users/{:id} |
+| methods | endpoints                             |
+| :-----: | ------------------------------------- |
+|   GET   | http://localhost:4000/api/users       |
+|   GET   | http://localhost:4000/api/users/{:id} |
+|  POST   | http://localhost:4000/api/users       |
+|   PUT   | http://localhost:4000/api/users/{:id} |
+| DELETE  | http://localhost:4000/api/users/{:id} |
