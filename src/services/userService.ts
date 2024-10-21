@@ -25,3 +25,12 @@ export function updateUser(id: string, userData: Omit<User, 'id'>): User | null 
     }
     return null;
 }
+
+export function deleteUser(id: string): boolean {
+    const index = usersStorage.findIndex((user) => user.id === id);
+    if (index !== -1) {
+        usersStorage.splice(index, 1);
+        return true;
+    }
+    return false;
+}

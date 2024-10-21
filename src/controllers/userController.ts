@@ -2,7 +2,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import { join } from 'path';
 import { validate } from 'uuid';
 import { HttpMethod } from '../types/HttpMethod';
-import { getUsers, getUser, createUser, updateUser } from '../services/userService';
+import { getUsers, getUser, createUser, updateUser, deleteUser } from '../services/userService';
 import { parseBody } from '../services/bodyParserService';
 
 export const baseControllerUrl = '/api/users';
@@ -73,12 +73,29 @@ export async function userController(req: IncomingMessage, res: ServerResponse, 
                 }
 
                 const updatedUser = updateUser(id, { username, age, hobbies });
-                res.statusCode = 201;
+                res.statusCode = 200;
                 return res.end(JSON.stringify(updatedUser));
             } catch {
                 res.statusCode = 400;
                 return res.end(JSON.stringify({ message: 'Invalid JSON format' }));
             }
+        }
+    }
+    if (method === HttpMethod.DELETE) {
+        if (id && pathname === join(baseControllerUrl, id)) {
+            if (!validate(id)) {
+                res.statusCode = 400;
+                res.end(JSON.stringify({ message: 'Invalid user ID format' }));
+                return;
+            }
+
+            const isDeleted = deleteUser(id);
+            if (isDeleted) {
+                res.statusCode = 204;
+                return res.end(JSON.stringify({ message: 'User has been deleted' }));
+            }
+            res.statusCode = 404;
+            return res.end(JSON.stringify({ message: 'User not found' }));
         }
     }
 
