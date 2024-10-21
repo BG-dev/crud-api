@@ -15,7 +15,7 @@ export async function userController(req: IncomingMessage, res: ServerResponse, 
     if (method === HttpMethod.GET) {
         if (pathname === baseControllerUrl) {
             const users = getUsers();
-            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.statusCode = 200;
             return res.end(JSON.stringify(users));
         }
         if (id && pathname === join(baseControllerUrl, id)) {
@@ -27,8 +27,10 @@ export async function userController(req: IncomingMessage, res: ServerResponse, 
 
             const user = getUser(id);
             if (!user) {
+                res.statusCode = 404;
+                res.end(JSON.stringify({ message: 'User not found' }));
             }
-            res.writeHead(201, { 'Content-Type': 'application/json' });
+            res.statusCode = 200;
             return res.end(JSON.stringify(user));
         }
     }
