@@ -4,7 +4,7 @@
     "main": "index.js",
     "scripts": {
         "start:dev": "ts-node-dev src/index.ts",
-        "test": "jest"
+        "start:prod": "tsc && node dist/index.js"
     },
     "keywords": [],
     "author": "Nikita Azizov",
@@ -15,6 +15,8 @@
         "uuid": "^10.0.0"
     },
     "devDependencies": {
+        "@babel/preset-env": "^7.25.8",
+        "@babel/preset-typescript": "^7.25.7",
         "@types/jest": "^29.5.13",
         "@types/node": "^22.7.7",
         "@types/uuid": "^10.0.0",
